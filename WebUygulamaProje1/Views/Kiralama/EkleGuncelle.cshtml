@@ -1,0 +1,44 @@
+﻿@model Kiralama
+
+<form method="post" enctype="multipart/form-data">
+    
+    <div class="row">
+       
+            <div class="border p-3 mt-5">
+                <div class="row pb-3">
+                    <h2 class="text-primary">@(Model == null ? "Yeni Kiralama" : "Kiralama Güncelle")</h2>
+                    <hr>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="OgrenciId" class="p-0"></label>
+                    <input asp-for="OgrenciId" class="form-control" />
+                    <span asp-validation-for="OgrenciId" class="text-danger"></span>
+
+                </div>
+                <div class="mb-3">
+                    <label asp-for="KitaplarId" class="p-0"></label>
+                    <select asp-for="KitaplarId" asp-items="ViewBag.KitaplarList" class="form-select">
+                    </select>
+
+
+                </div>
+
+                @if (Model != null)
+                {
+                    <button type="submit" class="btn btn-lg btn-primary" style="width:250px">Güncelle</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-lg btn-primary" style="width:250px">Yeni Kiralama</button>
+                }
+                <a asp-controller="Kiralama" asp-action="Index" class="btn btn-lg btn-primary" style="width:250px">
+                    Kiralamaya Geri Dön
+                </a>
+            </div>
+        </div>
+
+       
+   
+
+
+</form>
