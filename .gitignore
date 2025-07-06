@@ -3,6 +3,63 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+## Visual Studio için
+.vs/
+*.user
+*.suo
+
+## Build çıktıları
+bin/
+obj/
+out/
+
+## ASP.NET Core için
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json
+
+## Entity Framework Core migration çıktıları (isteğe bağlı)
+Migrations/
+
+## SQL Server local DB dosyaları
+*.mdf
+*.ldf
+
+## Rider IDE için
+.idea/
+
+## Log dosyaları
+*.log
+
+## Kullanıcı bazlı config ve cache
+*.userosscache
+*.sln.docstates
+
+## Dotnet publish çıktıları
+publish/
+
+## Paket cache
+**/packages/*
+
+## Npm / Yarn / Libman cache
+node_modules/
+libman.json
+
+## Temporary files
+*.tmp
+*.temp
+
+## OS geçici dosyaları
+.DS_Store
+Thumbs.db
+
+## Backup dosyaları
+*.bak
+
+## Git config dışı
+.gitignore
+
+
 # User-specific files
 *.rsuser
 *.suo
