@@ -18,18 +18,21 @@ Bu proje, ASP.NET Core 8.0 kullanılarak geliştirilmiş basit bir **kitap yöne
 
 ## 📸 Ekran Görüntüleri
 
-### Ana Sayfa
-![Ana Sayfa](https://github.com/user-attachments/assets/75541bfb-5fd6-44f5-920c-6a40bf35d5d7)
+### Kitap Listesi Üye Sayfası
+![Kitap Listesi Üye](https://github.com/user-attachments/assets/3be939e9-9145-4095-8af9-5e4f95386d55)
+
 
 ---
 
-### Kitap Listesi
-![Kitap Listesi](https://github.com/user-attachments/assets/4a2ff3cb-bf37-47f8-bea4-044733f99188)
+### Kitap Listesi Admin Sayfası
+![Kitap Listesi Admin](https://github.com/user-attachments/assets/c98f2e07-14c2-4624-9019-c96f8c549af2)
+
 
 ---
 
 ### Kitap Güncelleme
-![Kitap Güncelleme](https://github.com/user-attachments/assets/ea4b4967-b3c2-43ba-ab1a-0b40eb5f5367)
+![Kitap Güncelleme](https://github.com/user-attachments/assets/26dfeb0e-ab6c-477d-8992-ee8cea7aa8d0)
+
 
 
 
