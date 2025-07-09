@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebUygulamaProje1.Models;
 using WebUygulamaProje1.Utility;
 
 namespace WebUygulamaProje1.Controllers
 {
+    
     public class KitaplarController : Controller
     {
         private readonly IKitaplarRepository _KitaplarRepository;
@@ -16,6 +18,8 @@ namespace WebUygulamaProje1.Controllers
             _kitapTuruRepository = kitapTuruRepository;
             _webHostEnvironment = webHostEnvironment;
         }
+        [Authorize(Roles = "Admin,Ogrenci")]
+        
         public IActionResult Index()
         {
             List<Kitaplar> objKitaplarList = _KitaplarRepository.GetAll(includeProps:"KitapTuru").ToList();
@@ -24,6 +28,7 @@ namespace WebUygulamaProje1.Controllers
             return View(objKitaplarList);
         }
 
+        [Authorize(Roles = UserRoles.Role_Admin)]
         public IActionResult EkleGuncelle(int? id)
         {
             IEnumerable<SelectListItem> KitapTuruList = _kitapTuruRepository.GetAll()
@@ -52,6 +57,7 @@ namespace WebUygulamaProje1.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = UserRoles.Role_Admin)]
         public IActionResult EkleGuncelle(Kitaplar kitaplar,IFormFile? file)
         {
             if (ModelState.IsValid)
@@ -115,6 +121,8 @@ namespace WebUygulamaProje1.Controllers
         }
         */
         // GET ACTION
+
+        [Authorize(Roles = UserRoles.Role_Admin)]
         public IActionResult Sil(int? id)
         {
             if (id == null || id == 0)
@@ -127,6 +135,7 @@ namespace WebUygulamaProje1.Controllers
         }
 
         [HttpPost, ActionName("Sil")]
+        [Authorize(Roles = UserRoles.Role_Admin)]
         public IActionResult SilPOST(int? id)
         {
             Kitaplar? Kitaplar = _KitaplarRepository.Get(u => u.Id == id);

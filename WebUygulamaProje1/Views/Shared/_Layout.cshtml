@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using WebUygulamaProje1.Utility
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,21 +21,37 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Anasayfa</a>
                         </li>
+                       
+                        @if (User.IsInRole(UserRoles.Role_Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Kiralama" asp-action="Index">Kitap Kiralama</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="KitapTuru" asp-action="Index">Kitap Türü</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Kitaplar" asp-action="Index">Kitap İşlemleri</a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole(UserRoles.Role_Ogrenci))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Kitaplar" asp-action="Index">Kitap Listesi</a>
+                            </li>
+                        }
+
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Kiralama" asp-action="Index">Kitap Kiralama</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="KitapTuru" asp-action="Index">Kitap Türü</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Kitaplar" asp-action="Index">Kitap</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">İletişim</a>
                         </li>
                     </ul>
+
+                    <partial name="_LoginPartial"/>
+
+
                 </div>
             </div>
         </nav>
@@ -47,7 +64,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - WebUygulamaProje1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 Mustafa Çoban - Kütüphane Otomasyon Sistemi - <a asp-area="" asp-controller="Home" asp-action="Privacy">İletişim</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

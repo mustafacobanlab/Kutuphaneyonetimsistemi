@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebUygulamaProje1.Models;
 
 namespace WebUygulamaProje1.Utility
 {
-    public class UygulamaDbContext : DbContext
+    public class UygulamaDbContext : IdentityDbContext
     {
         public UygulamaDbContext(DbContextOptions<UygulamaDbContext> options) : base(options) { }
         
@@ -13,5 +14,6 @@ namespace WebUygulamaProje1.Utility
 
         public DbSet<Kiralama> Kiralama { get; set; }
 
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

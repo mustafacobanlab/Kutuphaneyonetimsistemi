@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebUygulamaProje1.Models;
 using WebUygulamaProje1.Utility;
 
 namespace WebUygulamaProje1.Controllers
 {
+    [Authorize(Roles = UserRoles.Role_Admin)]
     public class KiralamaController : Controller
     {
         private readonly IKiralamaRepository _kiralamaRepository;
@@ -80,6 +82,17 @@ namespace WebUygulamaProje1.Controllers
         // GET ACTION
         public IActionResult Sil(int? id)
         {
+            IEnumerable<SelectListItem> KitaplarList = _kitaplarRepository.GetAll()
+               .Select(k => new SelectListItem
+               {
+                   Text = k.KitapAdi,
+                   Value = k.Id.ToString()
+
+               }
+               );
+            ViewBag.KitaplarList = KitaplarList;
+
+
             if (id == null || id == 0)
             {
                 return NotFound();

@@ -11,17 +11,23 @@
 
         <div class="mb-3">
             <label asp-for="OgrenciId" class="p-0"></label>
-            <input asp-for="OgrenciId" class="form-control" />
+            <input asp-for="OgrenciId" disabled class="form-control" />
            
 
         </div>
+        <div class="mb-3">
+            <label asp-for="KitaplarId" class="p-0"></label>
+            <select asp-for="KitaplarId" asp-items="ViewBag.KitaplarList" disabled class="form-select">
+            </select>
 
+
+        </div>
         
         
 
         <button type="submit" class="btn btn-lg btn-primary" style="width:250px">Kiralama Kayıt Sil</button>
         <a asp-controller="Kiralama" asp-action="Index" class="btn btn-lg btn-primary" style="width:250px">
-            Kiralama Listesine Geri Dön
+            Kiralamalara Geri Dön
         </a>
     </div>
 

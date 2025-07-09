@@ -1,4 +1,5 @@
-﻿@model List<Kitaplar>
+﻿@using WebUygulamaProje1.Utility
+@model List<Kitaplar>
 
 @if (TempData["basarili"] != null)
 {
@@ -17,15 +18,18 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>Kitap Resmi</th>
                 <th>Id</th>
                 <th>Kitap Adı</th>
                 <th>Tanım</th>
                 <th>Yazar</th>
                 <th>Fiyat</th>
                 <th>Kitap Türü</th>
-
-                <th>   </th>
-                <th>   </th>
+                @if (User.IsInRole(UserRoles.Role_Admin))
+                {
+                    <th>   </th>
+                    <th>   </th>
+                }
             </tr>
 
         </thead>
@@ -33,30 +37,44 @@
             @foreach (var kitaplar in Model)
             {
                 <tr>
-                    <td>@kitaplar.Id</td>
-                    <td>@kitaplar.KitapAdi</td>
-                    <td>@kitaplar.Tanim</td>
-                    <td>@kitaplar.Yazar</td>
-                    <td>@kitaplar.Fiyat</td>
-                    <td>@kitaplar.KitapTuru.Ad</td>
-                    <td>
-                        <a asp-controller="Kitaplar" asp-action="EkleGuncelle" asp-route-id="@kitaplar.Id" type="button" class="btn btn-success" style="width:150px">Güncelle</a>
+                    <td align="center" valign="middle">
+                        <img src="@kitaplar.ResimUrl" style="border-radius: 7px; border: 1px solid #bbb9b9;
+           max-width: 95px; max-height: 200px;" />
+
                     </td>
-                    <td>
-                        <a asp-controller="Kitaplar" asp-action="Sil" asp-route-id="@kitaplar.Id" type="button" class="btn btn-danger" style="width:150px">Sil</a>
-                    </td>
+                    <td align="center" valign="middle">@kitaplar.Id</td>
+                    <td align="center" valign="middle">@kitaplar.KitapAdi</td>
+                    <td align="center" valign="middle">@kitaplar.Tanim</td>
+                    <td align="center" valign="middle">@kitaplar.Yazar</td>
+                    <td align="center" valign="middle">@kitaplar.Fiyat</td>
+                    <td align="center" valign="middle">@kitaplar.KitapTuru.Ad</td>
+                    @if (User.IsInRole(UserRoles.Role_Admin))
+                    {
+
+                        <td align="center" valign="middle">
+                            <a asp-controller="Kitaplar" asp-action="EkleGuncelle" asp-route-id="@kitaplar.Id" type="button" class="btn btn-success" style="width:150px">Güncelle</a>
+                        </td>
+                        <td align="center" valign="middle">
+                            <a asp-controller="Kitaplar" asp-action="Sil" asp-route-id="@kitaplar.Id" type="button" class="btn btn-danger" style="width:150px">Sil</a>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
 
     </table>
-    <div class="row pt-3 pb-2">
-        <div>
-            <a asp-controller="Kitaplar" asp-action="EkleGuncelle" class="btn btn-lg btn-primary" type="button">
-                Yeni Kitap Oluştur
-            </a>
 
+    @if (User.IsInRole(UserRoles.Role_Admin))
+    {
+        <div class="row pt-3 pb-2">
+            <div>
+                <a asp-controller="Kitaplar" asp-action="EkleGuncelle" class="btn btn-lg btn-primary" type="button">
+                    Yeni Kitap Oluştur
+                </a>
+
+
+            </div>
 
         </div>
-    </div>
+    }
 </div>
