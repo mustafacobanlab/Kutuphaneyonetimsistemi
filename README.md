@@ -19,19 +19,31 @@ Bu proje, ASP.NET Core 8.0 kullanılarak geliştirilmiş basit bir **kitap yöne
 ## 📸 Ekran Görüntüleri
 
 ### Kitap Listesi Üye Sayfası
-![Kitap Listesi Üye](https://github.com/user-attachments/assets/3be939e9-9145-4095-8af9-5e4f95386d55)
+<img width="1054" height="930" alt="image" src="https://github.com/user-attachments/assets/cb77ce70-810b-4c21-8624-45d90e667cb7" />
+
 
 
 ---
 
 ### Kitap Listesi Admin Sayfası
-![Kitap Listesi Admin](https://github.com/user-attachments/assets/c98f2e07-14c2-4624-9019-c96f8c549af2)
+<img width="1362" height="930" alt="image" src="https://github.com/user-attachments/assets/a4e4fe22-af81-4812-902b-371b99574f09" />
+
 
 
 ---
 
 ### Kitap Güncelleme
-![Kitap Güncelleme](https://github.com/user-attachments/assets/26dfeb0e-ab6c-477d-8992-ee8cea7aa8d0)
+<img width="1063" height="928" alt="image" src="https://github.com/user-attachments/assets/ebe1f5b5-6efd-4ca3-b05b-c9f0d5f53fe7" />
+
+---
+
+### Kitap Kiralama Sayfası
+<img width="1054" height="795" alt="image" src="https://github.com/user-attachments/assets/d99c14c9-9e31-4ff9-b11d-0e1cd302c15b" />
+
+
+---
+### Kitap Arama İşlemi
+<img width="1052" height="592" alt="image" src="https://github.com/user-attachments/assets/4dcbdad4-2114-4c2a-91f2-874076024d20" />
 
 
 
@@ -60,10 +72,3 @@ Bu proje, ASP.NET Core 8.0 kullanılarak geliştirilmiş basit bir **kitap yöne
 
 ---
 
-## 🛠️ Kurulum ve Çalıştırma
-
-1. Projeyi klonlayın:
-
-   ```bash
-   git clone https://github.com/kullaniciAdi/kitap-kutuphane.git
-   cd kitap-kutuphane
