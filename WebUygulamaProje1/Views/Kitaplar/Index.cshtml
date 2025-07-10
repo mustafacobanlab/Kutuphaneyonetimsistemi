@@ -12,9 +12,16 @@
         <div>
 <h1>Kitaplar</h1>
 </div></div>
+    <form asp-controller="Kitaplar" asp-action="Index" method="get" class="row g-2 mb-4">
+        <div class="col-md-6">
+            <input type="text" name="arama" class="form-control" placeholder="Kitap veya yazar adı" value="@Context.Request.Query["arama"]" />
+        </div>
+        <div class="col-md-auto">
+            <button type="submit" class="btn btn-primary">Ara</button>
+        </div>
+    </form>
 
-
-
+   
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -25,6 +32,7 @@
                 <th>Yazar</th>
                 <th>Fiyat</th>
                 <th>Kitap Türü</th>
+                <th>Stok</th>
                 @if (User.IsInRole(UserRoles.Role_Admin))
                 {
                     <th>   </th>
@@ -48,6 +56,8 @@
                     <td align="center" valign="middle">@kitaplar.Yazar</td>
                     <td align="center" valign="middle">@kitaplar.Fiyat</td>
                     <td align="center" valign="middle">@kitaplar.KitapTuru.Ad</td>
+                    <td align="center" valign="middle">@kitaplar.stock</td>
+                    
                     @if (User.IsInRole(UserRoles.Role_Admin))
                     {
 

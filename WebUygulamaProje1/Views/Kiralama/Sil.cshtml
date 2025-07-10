@@ -10,15 +10,15 @@
       
 
         <div class="mb-3">
-            <label asp-for="OgrenciId" class="p-0"></label>
-            <input asp-for="OgrenciId" disabled class="form-control" />
+            <label asp-for="ApplicationUser.Ogrencino" class="p-0"></label>
+            <input asp-for="ApplicationUser.Ogrencino" disabled class="form-control" />
            
 
         </div>
         <div class="mb-3">
-            <label asp-for="KitaplarId" class="p-0"></label>
-            <select asp-for="KitaplarId" asp-items="ViewBag.KitaplarList" disabled class="form-select">
-            </select>
+            <label asp-for="Kitaplar.KitapAdi" class="p-0"></label>
+            <input asp-for="Kitaplar.KitapAdi" disabled class="form-control">
+            
 
 
         </div>

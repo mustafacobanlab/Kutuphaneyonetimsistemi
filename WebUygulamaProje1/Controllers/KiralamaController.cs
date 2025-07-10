@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Identity.Client;
+using WebUygulamaProje1.Migrations;
 using WebUygulamaProje1.Models;
-using WebUygulamaProje1.Utility;
+using WebUygulamaProje1.Utility; // UserRoles gibi yardımcı sınıflarınızın burada olduğundan emin olun.
 
 namespace WebUygulamaProje1.Controllers
 {
@@ -12,107 +14,142 @@ namespace WebUygulamaProje1.Controllers
         private readonly IKiralamaRepository _kiralamaRepository;
         private readonly IKitaplarRepository _kitaplarRepository;
         public readonly IWebHostEnvironment _webHostEnvironment;
-        public KiralamaController(IKiralamaRepository kiralamaRepository, IKitaplarRepository kitaplarRepository,IWebHostEnvironment webHostEnvironment)
+        private readonly IApplicationUserRepository _applicationUserRepository;
+
+        public KiralamaController(IKiralamaRepository kiralamaRepository, IKitaplarRepository kitaplarRepository, IWebHostEnvironment webHostEnvironment, IApplicationUserRepository applicationUserRepository)
         {
             _kiralamaRepository = kiralamaRepository;
             _kitaplarRepository = kitaplarRepository;
             _webHostEnvironment = webHostEnvironment;
+            _applicationUserRepository = applicationUserRepository;
         }
-        public IActionResult Index()
-        {
-            List<Kiralama> objKiralamaList = _kiralamaRepository.GetAll(includeProps:"Kitaplar").ToList();
-            
 
+        public IActionResult Index()
+
+
+        {
+            // Index sayfasında Kiralama listesini çekerken hem Kitaplar hem de ApplicationUser'ı dahil et.
+            List<Kiralama> objKiralamaList = _kiralamaRepository.GetAll(includeProps: "Kitaplar,ApplicationUser").ToList();
             return View(objKiralamaList);
         }
 
+       
+
         public IActionResult EkleGuncelle(int? id)
         {
-            IEnumerable<SelectListItem> KitaplarList = _kitaplarRepository.GetAll()
-                .Select(k => new SelectListItem
-                {
-                    Text = k.KitapAdi,
-                    Value = k.Id.ToString()
-
-                }
-                );
-            ViewBag.KitaplarList = KitaplarList;
+            // Dropdown listelerini dolduran yardımcı metodu çağırın.
+            DoldurViewBagListeleri();
 
             if (id == null || id == 0)
             {
-                // ekle
-                return View();
+                // Yeni kiralama
+                return View(new Kiralama());
             }
             else
             {
-                // guncelleme
-
-                Kiralama? KiralamaVt = _kiralamaRepository.Get(u => u.Id == id);
-                if (KiralamaVt == null) { return NotFound(); }
-                return View(KiralamaVt);
+                // Güncelleme
+                // Güncelleme için kiralama kaydını çekerken Kitaplar ve ApplicationUser'ı dahil edin.
+                Kiralama? kiralamaVt = _kiralamaRepository.Get(u => u.Id == id, includeProps: "Kitaplar,ApplicationUser");
+                if (kiralamaVt == null) { return NotFound(); }
+                return View(kiralamaVt);
             }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken] // CSRF saldırılarına karşı koruma için önerilir
         public IActionResult EkleGuncelle(Kiralama kiralama)
         {
-            if (ModelState.IsValid)
+            // Eğer ModelState geçerli değilse
+            if (!ModelState.IsValid) // BURASI ÖNEMLİ: Hata varsa!
             {
-                
+                // View'ı tekrar göstermeden önce dropdown listelerini yeniden doldur.
+                // Aksi takdirde, dropdown'lar boş gelir ve kullanıcı doğru seçim yapamaz.
+                DoldurViewBagListeleri();
+                return View(kiralama); // Geçersiz model ile View'a geri dön ki hatalar gösterilsin.
+            }
 
-                if (kiralama.Id == 0)
+            // ModelState geçerliyse kayıt işlemlerine devam et.
+            if (kiralama.Id == 0)
+            {
+                // Yeni Kiralama Oluşturma
+                Kitaplar? kiralananKitap = _kitaplarRepository.Get(u => u.Id == kiralama.KitaplarId);
+                if (kiralananKitap.stock > 0)
                 {
-                    _kiralamaRepository.Ekle(kiralama);
-                    TempData["basarili"] = "Kiralama Kaydı Başarıyla Oluşturuldu.";
+                    kiralananKitap.stock = kiralananKitap.stock - 1;
                 }
                 else
                 {
-                    _kiralamaRepository.Guncelle(kiralama);
-                        TempData["basarili"] = "Kiralama Kaydı Başarılıyla Güncellendi.";
+                    ModelState.AddModelError(string.Empty, "Bu kitap için yeterli stok bulunmamaktadır.");
+                    DoldurViewBagListeleri(); // Dropdownları tekrar doldur
+                    return View(kiralama);
                 }
-                    
-                _kiralamaRepository.Kaydet(); //SaveChanges yapmazsanız bilgiler veritabanına eklenmez.
-                
-                return RedirectToAction("Index");
+
+                // Yeni kiralama oluşturulduğunda oluşturma tarihini set et
+                kiralama.olusturma = DateTime.Now;
+                kiralama.bitis = DateTime.Now.AddDays(14);
+
+                _kiralamaRepository.Ekle(kiralama);
+                TempData["basarili"] = "Kiralama Kaydı Başarıyla Oluşturuldu.";
             }
-            return View();
+            else
+            {
+                // Mevcut Kiralama Güncelleme
+                _kiralamaRepository.Guncelle(kiralama);
+                TempData["basarili"] = "Kiralama Kaydı Başarıyla Güncellendi.";
+            }
+
+            _kiralamaRepository.Kaydet(); // SaveChanges yapmazsanız bilgiler veritabanına eklenmez.
+           // toplam gün farkı (tam sayıya çevrildi)
+            return RedirectToAction("Index");
         }
 
-        
-        // GET ACTION
+        // Dropdown listelerini dolduran yardımcı metod
+        private void DoldurViewBagListeleri()
+        {
+            IEnumerable<SelectListItem> applicationUserList = _applicationUserRepository.GetAll().Select(k => new SelectListItem
+            {
+                Text = k.Ogrencino.ToString()+" "+k.AdSoyad,
+                Value = k.Id.ToString()
+            });
+            ViewBag.applicationUserList = applicationUserList;
+
+            IEnumerable<SelectListItem> KitaplarList = _kitaplarRepository.GetAll().Select(k => new SelectListItem
+            {
+                Text = k.KitapAdi,
+                Value = k.Id.ToString()
+            });
+            ViewBag.KitaplarList = KitaplarList;
+        }
+
+        // GET ACTION Sil
         public IActionResult Sil(int? id)
         {
-            IEnumerable<SelectListItem> KitaplarList = _kitaplarRepository.GetAll()
-               .Select(k => new SelectListItem
-               {
-                   Text = k.KitapAdi,
-                   Value = k.Id.ToString()
-
-               }
-               );
-            ViewBag.KitaplarList = KitaplarList;
-
-
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            Kiralama? KiralamaVt = _kiralamaRepository.Get(u => u.Id == id);
-            if (KiralamaVt == null) { return NotFound(); }
-            return View(KiralamaVt);
+            // Silme view'ında da Kitaplar ve ApplicationUser'ı dahil edin
+            Kiralama? kiralamaVt = _kiralamaRepository.Get(u => u.Id == id, includeProps: "Kitaplar,ApplicationUser");
+            if (kiralamaVt == null) { return NotFound(); }
+            return View(kiralamaVt);
         }
 
         [HttpPost, ActionName("Sil")]
+        [ValidateAntiForgeryToken] // CSRF saldırılarına karşı koruma için önerilir
         public IActionResult SilPOST(int? id)
         {
             Kiralama? kiralama = _kiralamaRepository.Get(u => u.Id == id);
             if (kiralama == null)
             {
-                return NotFound(); 
+                return NotFound();
+            }
 
-                }
+            Kitaplar? kiralananKitap = _kitaplarRepository.Get(u => u.Id == kiralama.KitaplarId);
+            kiralananKitap.stock = kiralananKitap.stock + 1;
+
             _kiralamaRepository.Sil(kiralama);
             _kiralamaRepository.Kaydet();
+
             TempData["basarili"] = "Kiralama Kaydı Başarıyla Silindi.";
             return RedirectToAction("Index");
         }

@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<UygulamaDbContext>(opitons =>
         opitons.UseSqlServer(builder.Configuration.GetConnectionString("Defaultconnection")));
 
-builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<UygulamaDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<UygulamaDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddRazorPages();
 
@@ -20,6 +20,11 @@ builder.Services.AddScoped<IKitaplarRepository, KitaplarRepository>();
 builder.Services.AddScoped<IKiralamaRepository, KiralamaRepository>();
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+
+
+
 
 // Add services to the container.
 

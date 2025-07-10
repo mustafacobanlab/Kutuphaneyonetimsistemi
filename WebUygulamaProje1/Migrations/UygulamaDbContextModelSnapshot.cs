@@ -176,12 +176,10 @@ namespace WebUygulamaProje1.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -218,12 +216,10 @@ namespace WebUygulamaProje1.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -241,13 +237,25 @@ namespace WebUygulamaProje1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("KitaplarId")
                         .HasColumnType("int");
 
                     b.Property<int>("OgrenciId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("bitis")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("olusturma")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("KitaplarId");
 
@@ -302,6 +310,9 @@ namespace WebUygulamaProje1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("stock")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("KitapTuruId");
@@ -312,6 +323,9 @@ namespace WebUygulamaProje1.Migrations
             modelBuilder.Entity("WebUygulamaProje1.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("AdSoyad")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Adres")
                         .HasColumnType("nvarchar(max)");
@@ -381,11 +395,19 @@ namespace WebUygulamaProje1.Migrations
 
             modelBuilder.Entity("WebUygulamaProje1.Models.Kiralama", b =>
                 {
+                    b.HasOne("WebUygulamaProje1.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WebUygulamaProje1.Models.Kitaplar", "Kitaplar")
                         .WithMany()
                         .HasForeignKey("KitaplarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Kitaplar");
                 });

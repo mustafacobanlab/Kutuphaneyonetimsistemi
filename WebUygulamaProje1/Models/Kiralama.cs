@@ -21,7 +21,20 @@ namespace WebUygulamaProje1.Models
         [ValidateNever]
         public Kitaplar Kitaplar { get; set; }
 
+        [ValidateNever]
+        public DateTime bitis { get; set; }
 
+
+        [ValidateNever]
+        public DateTime olusturma {  get; set; }
+
+        [Required]
+        [Display(Name = "Öğrenci")]
+        public string ApplicationUserId { get; set; } // Foreign Key (IdentityUser.Id string olduğu için)
+        [ForeignKey("ApplicationUserId")]
+
+        [ValidateNever]
+        public ApplicationUser ApplicationUser { get; set; } // Navigasyon Özelliği
 
 
     }

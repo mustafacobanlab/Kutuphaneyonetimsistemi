@@ -19,10 +19,11 @@
             <tr>
                 <th>Id</th>
                 <th>Öğrenci Id</th>
+                <th>Öğrenci Ad Soyad</th>
                 <th>Kitap Id</th>
+                <th>Ödünç Alma Tarihi</th>
+                <th>Son Teslim Tarihi</th>
                 
-
-                <th>   </th>
                 <th>   </th>
             </tr>
 
@@ -30,14 +31,29 @@
         <tbody>
             @foreach (var kiralama in Model)
             {
+                var fark = (DateTime.Now - kiralama.bitis).TotalDays; // Bugün - bitiş tarihi
                 <tr>
                     <td>@kiralama.Id</td>
-                    <td>@kiralama.OgrenciId</td>
+                  
+                    <td>@kiralama.ApplicationUser.Ogrencino</td>
+                    <td>@kiralama.ApplicationUser.AdSoyad</td>
                     
                     <td>@kiralama.Kitaplar.KitapAdi</td>
-                    <td>
-                        <a asp-controller="Kiralama" asp-action="EkleGuncelle" asp-route-id="@kiralama.Id" type="button" class="btn btn-success" style="width:150px">Güncelle</a>
-                    </td>
+                    <td>@kiralama.olusturma.ToString("dd,MMM, yyyy")</td>
+                    @if (kiralama.bitis >= DateTime.Now){
+                        <td>@kiralama.bitis.ToString("dd,MMM, yyyy")
+                            <p style="color:deepskyblue"> (<span>@Math.Ceiling(-fark) gün kaldı</span>)</p>
+                        </td>
+                    }
+                    else
+                    {
+
+                        <td style="background-color: lightgoldenrodyellow">@kiralama.bitis.ToString("dd,MMM, yyyy")
+                        <p>
+                                (<span style="color:red">@Math.Floor(fark) gün geçti</span>)
+                        </p></td>
+                    }
+                    
                     <td>
                         <a asp-controller="Kiralama" asp-action="Sil" asp-route-id="@kiralama.Id" type="button" class="btn btn-danger" style="width:150px">Sil</a>
                     </td>

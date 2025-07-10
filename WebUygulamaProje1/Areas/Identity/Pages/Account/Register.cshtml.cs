@@ -102,6 +102,8 @@ namespace WebUygulamaProje1.Areas.Identity.Pages.Account
             [Required]
             public int Ogrencino { get; set; }
 
+            public string? AdSoyad { get; set; }
+
             public string? Adres { get; set; }
 
             public string? Fakulte { get; set; }

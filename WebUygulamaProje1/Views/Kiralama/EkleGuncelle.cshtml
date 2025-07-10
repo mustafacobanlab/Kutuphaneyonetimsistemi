@@ -1,29 +1,37 @@
-﻿@model Kiralama
+﻿@model WebUygulamaProje1.Models.Kiralama
 
 <form method="post" enctype="multipart/form-data">
-   
+    @* Güncelleme modunda Id'yi taşımak için gizli alan *@
+    @if (Model != null && Model.Id != 0)
+    {
+        <input type="hidden" asp-for="Id" />
+    }
+
     <div class="row">
-       <div class="col-10">
+        <div class="col-10">
             <div class="border p-3 mt-5">
                 <div class="row pb-3">
-                    <h2 class="text-primary">@(Model == null ? "Yeni Kiralama" : "Kiralama Güncelle")</h2>
+                    <h2 class="text-primary">@(Model == null || Model.Id == 0 ? "Yeni Kiralama" : "Kiralama Güncelle")</h2>
                     <hr>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="OgrenciId" class="p-0"></label>
-                    <input asp-for="OgrenciId" class="form-control" />
-                    <span asp-validation-for="OgrenciId" class="text-danger"></span>
 
+                <div class="mb-3">
+                    <label asp-for="ApplicationUserId" class="p-0"></label>
+                    <select asp-for="ApplicationUserId" asp-items="ViewBag.applicationUserList" class="form-select">
+                        <option disabled selected>-- Öğrenci Numarası Seçiniz --</option>
+                    </select>
+                    <span asp-validation-for="ApplicationUserId" class="text-danger"></span>
                 </div>
+                
                 <div class="mb-3">
                     <label asp-for="KitaplarId" class="p-0"></label>
                     <select asp-for="KitaplarId" asp-items="ViewBag.KitaplarList" class="form-select">
+                        <option disabled selected>-- Kitap Seçiniz --</option>
                     </select>
-
-
+                    <span asp-validation-for="KitaplarId" class="text-danger"></span>
                 </div>
 
-                @if (Model != null)
+                @if (Model != null && Model.Id != 0)
                 {
                     <button type="submit" class="btn btn-lg btn-primary" style="width:250px">Güncelle</button>
                 }
@@ -35,20 +43,25 @@
                     Kiralamaya Geri Dön
                 </a>
             </div>
-            </div>
-    
+        </div>
+
         <div class="col-2">
             <br />
-            @if (Model != null)
+            @* Kitaplar nesnesinin null olup olmadığını kontrol edin *@
+            @if (Model != null && Model.Kitaplar != null)
             {
                 <img src="@Model.Kitaplar.ResimUrl" width="100%"
                      style="border-radius:7px;border:1px solid #bbb9b9" />
             }
-
-
+            @* İsteğe bağlı: Eğer Kitaplar null ise varsayılan bir resim veya mesaj gösterebilirsiniz *@
+            else if (Model != null && Model.Id == 0)
+            {
+                <p></p>
+            }
+            else
+            {
+              <p></p>
+            }
         </div>
-        </div>
-
-
-
+    </div>
 </form>

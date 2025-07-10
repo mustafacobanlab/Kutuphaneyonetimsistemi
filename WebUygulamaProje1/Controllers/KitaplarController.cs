@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using WebUygulamaProje1.Models;
 using WebUygulamaProje1.Utility;
 
@@ -12,21 +13,32 @@ namespace WebUygulamaProje1.Controllers
         private readonly IKitaplarRepository _KitaplarRepository;
         private readonly IKitapTuruRepository _kitapTuruRepository;
         public readonly IWebHostEnvironment _webHostEnvironment;
-        public KitaplarController(IKitaplarRepository kitaplarRepository, IKitapTuruRepository kitapTuruRepository,IWebHostEnvironment webHostEnvironment)
+        private readonly UygulamaDbContext _context;
+        public KitaplarController(IKitaplarRepository kitaplarRepository, IKitapTuruRepository kitapTuruRepository,IWebHostEnvironment webHostEnvironment, UygulamaDbContext context)
         {
             _KitaplarRepository = kitaplarRepository;
             _kitapTuruRepository = kitapTuruRepository;
             _webHostEnvironment = webHostEnvironment;
+            _context = context;
         }
         [Authorize(Roles = "Admin,Ogrenci")]
-        
-        public IActionResult Index()
+        public IActionResult Index(string arama)
         {
-            List<Kitaplar> objKitaplarList = _KitaplarRepository.GetAll(includeProps:"KitapTuru").ToList();
-            
+            var kitaplar = _KitaplarRepository.GetAll(includeProps: "KitapTuru");
 
-            return View(objKitaplarList);
+            if (!string.IsNullOrEmpty(arama))
+            {
+                var aramaLower = arama.ToLower(new System.Globalization.CultureInfo("tr-TR"));
+
+                kitaplar = kitaplar.Where(k =>
+                    k.KitapAdi.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(aramaLower) ||
+                    k.Yazar.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(aramaLower)
+                );
+            }
+
+            return View(kitaplar.ToList());
         }
+
 
         [Authorize(Roles = UserRoles.Role_Admin)]
         public IActionResult EkleGuncelle(int? id)
@@ -93,6 +105,10 @@ namespace WebUygulamaProje1.Controllers
             }
             return View();
         }
+
+
+   
+
 
         /*
         public IActionResult Guncelle(int? id)
